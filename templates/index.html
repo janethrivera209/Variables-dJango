@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title> Funciones </title>
+<style>
+  body {
+    font-family: sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: #ECFEFF;
+  }
+
+  .container {
+    background: #FAE8FF;
+    padding: 30px 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    text-align: center;
+  }
+
+  input {
+    width: 100px;
+    padding: 8px;
+    margin: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    text-align: center;
+  }
+
+  button {
+    padding: 10px 20px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 8px;
+    background: #FEF9C2;
+    color: #09090B;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  button:hover {
+    background: #FFDF20;
+  }
+
+  .resultado {
+    margin-top: 20px;
+    font-size: 18px;
+    font-weight: bold;
+  }
+
+  .resultado div {
+    margin: 5px 0;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h2> Funciones </h2>
+
+  <label>X:</label>
+  <input id="x" type="text" placeholder="">
+  <label>Y:</label>
+  <input id="y" type="text" placeholder="">
+  <br>
+  <button onclick="ejecutar()">Ejecutar</button>
+
+  <div class="resultado" id="resultado">
+    <div id="res-z"></div>
+    <div id="res-x"></div>
+  </div>
+</div>
+
+<script>
+async function ejecutar() {
+    const x = document.getElementById("x").value.trim();
+    const y = document.getElementById("y").value.trim();
+
+    if (x === "" || y === "" || isNaN(x) || isNaN(y)) {
+        document.getElementById("res-z").textContent = "";
+        document.getElementById("res-x").textContent = "Ingresa números válidos.";
+        return;
+    }
+
+    // ✅ FormData para enviar al servidor
+    const formData = new FormData();
+    formData.append("x", x);
+    formData.append("y", y);
+
+    const res = await fetch("/evaluate/", {
+        method: "POST",
+        body: formData
+    });
+
+    const data = await res.json();
+
+    const lines = data.output.trim().split("\n");
+
+    document.getElementById("res-z").textContent = lines[0] || "";
+    document.getElementById("res-x").textContent = lines[1] || "";
+}
+</script>
+
+</body>
+</html>
+
+
+
+
+
+
